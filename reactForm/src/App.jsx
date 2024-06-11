@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import './App.css'
 import FormInput from './components/FormInput'
+import axios from 'axios';
+import { useSnackbar} from 'notistack';
 
 function App() {
+  
+  const { enqueueSnackbar } = useSnackbar();
 
   const [values,setValues] = useState({
     username:"",
@@ -60,14 +64,29 @@ function App() {
     required: true
     }
   ]
- const handleSubmit = (e) =>{
-    e.preventDefault();
-  }
 
   const onChange = (e) =>{
     setValues({...values, [e.target.name]: e.target.value });
   };
+
   console.log(values);
+
+ const handleSubmit = (e) =>{
+    e.preventDefault();
+    const data = values;
+    console.log(values);
+    axios
+      .post('https://3000-yuvraj08-reactformvalid-vaefd2ie6ng.ws-us114.gitpod.io/', data)
+      .then(()=>{
+        enqueueSnackbar('Registeration Done Successfully', {variant: 'success'});
+      })
+      .catch((error) => {
+        // alert('An error occured, Please Check console');
+        enqueueSnackbar('Error', {variant:'error'});
+        console.log(error);
+      });
+  }
+
   return (
     <div className='App'>
       <form action="" onSubmit={handleSubmit}>
